@@ -5,15 +5,35 @@ body {
   text-align: center;
 }
 
+details {
+  margin: 15px auto;
+  width: 300px;
+  text-align: left;
+  background: #222;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.note {
+  font-size: 12px;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+input[type="range"] {
+  width: 100%;
+}
+
 #preview svg {
   max-width: 90vw;
   max-height: 70vh;
   width: auto;
   height: auto;
   border: 1px solid #555;
+  margin-top: 10px;
 }
 
-/* 🔄 くるくる */
+/* 🔄 スピナー */
 .spinner {
   margin: 20px auto;
   width: 40px;
@@ -25,7 +45,5 @@ body {
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
