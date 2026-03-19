@@ -10,12 +10,23 @@ function convert() {
 
     img.onload = function() {
 
+      const width = img.width;
+      const height = img.height;
+
       ImageTracer.imageToSVG(
         img.src,
         function(svg) {
 
+          // 🔥 SVGにサイズを強制追加
+          svg = svg.replace(
+            "<svg",
+            `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"`
+          );
+
+          // プレビュー表示
           document.getElementById("preview").innerHTML = svg;
 
+          // ダウンロード
           const blob = new Blob([svg], { type: "image/svg+xml" });
           const url = URL.createObjectURL(blob);
 
@@ -30,11 +41,8 @@ function convert() {
           ltres: 1,
           qtres: 1,
           pathomit: 8,
-
-          // 👇 ここが重要
-          colorsampling: 2,   // 自動カラー検出
-          numberofcolors: 16, // 色数（増やすとリアル）
-          mincolorratio: 0.02 // 小さい色を無視
+          colorsampling: 2,
+          numberofcolors: 16
         }
       );
 
