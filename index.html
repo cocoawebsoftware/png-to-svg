@@ -2,21 +2,26 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>PNG → SVG Converter</title>
+  <title>PNG → SVG Vectorizer</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>PNG → SVG Converter</h1>
+<h1>PNG → SVG（ガチ変換）</h1>
 
 <input type="file" id="fileInput" accept="image/png">
 <br><br>
 
 <button onclick="convert()">変換</button>
-<br><br>
 
+<h3>プレビュー</h3>
+<div id="preview"></div>
+
+<br>
 <a id="download" style="display:none">SVGダウンロード</a>
 
+<script src="https://unpkg.com/imagetracerjs"></script>
 <script src="script.js"></script>
+
 </body>
 </html>
