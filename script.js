@@ -1,3 +1,10 @@
+const colorSlider = document.getElementById("colors");
+const colorVal = document.getElementById("colorVal");
+
+colorSlider.oninput = () => {
+  colorVal.textContent = colorSlider.value;
+};
+
 function convert() {
   const file = document.getElementById("fileInput").files[0];
   if (!file) return alert("ファイル選択");
@@ -6,7 +13,6 @@ function convert() {
   const preview = document.getElementById("preview");
   const link = document.getElementById("download");
 
-  // 🔄 表示
   loading.style.display = "block";
   preview.innerHTML = "";
   link.style.display = "none";
@@ -27,13 +33,12 @@ function convert() {
         qtres: parseFloat(document.getElementById("qtres").value),
         pathomit: parseInt(document.getElementById("pathomit").value),
         colorsampling: document.getElementById("mode").value === "bw" ? 0 : 2,
-        numberofcolors: parseInt(document.getElementById("colors").value),
+        numberofcolors: parseInt(colorSlider.value),
         mincolorratio: parseFloat(document.getElementById("mincolorratio").value)
       };
 
       ImageTracer.imageToSVG(img.src, function(svg) {
 
-        // サイズ維持
         svg = svg.replace(
           "<svg",
           `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"`
@@ -48,7 +53,6 @@ function convert() {
         link.download = "output.svg";
         link.style.display = "block";
 
-        // 🔄 非表示
         loading.style.display = "none";
 
       }, options);
