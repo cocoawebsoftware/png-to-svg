@@ -1,8 +1,14 @@
 body {
-  text-align: center;
-  font-family: sans-serif;
   background: #111;
   color: white;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+#preview svg {
+  max-width: 300px;
+  border: 1px solid #555;
+  margin-top: 10px;
 }
 
 button {
