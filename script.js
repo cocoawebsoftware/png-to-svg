@@ -1,13 +1,15 @@
-const range = document.getElementById("colorRange");
-const colorText = document.getElementById("colorValue");
-
-range.oninput = () => {
-  colorText.textContent = range.value;
-};
-
 function convert() {
   const file = document.getElementById("fileInput").files[0];
-  if (!file) return alert("ファイル選んで");
+  if (!file) return alert("ファイル選択");
+
+  const loading = document.getElementById("loading");
+  const preview = document.getElementById("preview");
+  const link = document.getElementById("download");
+
+  // 🔄 表示
+  loading.style.display = "block";
+  preview.innerHTML = "";
+  link.style.display = "none";
 
   const reader = new FileReader();
 
@@ -20,41 +22,36 @@ function convert() {
       const width = img.width;
       const height = img.height;
 
-      const colors = parseInt(range.value);
+      const options = {
+        ltres: parseFloat(document.getElementById("ltres").value),
+        qtres: parseFloat(document.getElementById("qtres").value),
+        pathomit: parseInt(document.getElementById("pathomit").value),
+        colorsampling: document.getElementById("mode").value === "bw" ? 0 : 2,
+        numberofcolors: parseInt(document.getElementById("colors").value),
+        mincolorratio: parseFloat(document.getElementById("mincolorratio").value)
+      };
 
-      ImageTracer.imageToSVG(
-        img.src,
-        function(svg) {
+      ImageTracer.imageToSVG(img.src, function(svg) {
 
-          // SVGサイズを元画像に合わせる
-          svg = svg.replace(
-            "<svg",
-            `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"`
-          );
+        // サイズ維持
+        svg = svg.replace(
+          "<svg",
+          `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"`
+        );
 
-          // 表示（CSSでアスペクト比維持しつつ縮小）
-          document.getElementById("preview").innerHTML = svg;
+        preview.innerHTML = svg;
 
-          // ダウンロード
-          const blob = new Blob([svg], { type: "image/svg+xml" });
-          const url = URL.createObjectURL(blob);
+        const blob = new Blob([svg], { type: "image/svg+xml" });
+        const url = URL.createObjectURL(blob);
 
-          const link = document.getElementById("download");
-          link.href = url;
-          link.download = "output.svg";
-          link.style.display = "block";
-          link.textContent = "SVGダウンロード";
-        },
+        link.href = url;
+        link.download = "output.svg";
+        link.style.display = "block";
 
-        {
-          ltres: 1,
-          qtres: 1,
-          pathomit: 8,
-          colorsampling: 2,
-          numberofcolors: colors,
-          mincolorratio: 0.02
-        }
-      );
+        // 🔄 非表示
+        loading.style.display = "none";
+
+      }, options);
 
     };
   };
