@@ -10,59 +10,65 @@
 
 <h2>PNG → SVG</h2>
 
-<input type="file" id="fileInput" accept="image/png"><br><br>
+<!-- ドラッグ＆ドロップ -->
+<div id="dropArea">ここに画像をドロップ or クリック</div>
+<input type="file" id="fileInput" accept="image/png" hidden>
 
+<br>
+
+<!-- プリセット -->
+<div>
+  <button onclick="setPreset('logo')">ロゴ</button>
+  <button onclick="setPreset('photo')">写真</button>
+  <button onclick="setPreset('icon')">アイコン</button>
+</div>
+
+<br>
 <button onclick="convert()">変換</button>
 
-<!-- 🔽 高度設定 -->
+<!-- 高度設定 -->
 <details>
   <summary>高度設定</summary>
-
   <p class="note">より高度なSVGを求める場合のみ変更してください</p>
 
-  <label title="色の数を決めます（多いほどリアル・重い）">
-    色数: <span id="colorVal">16</span>
-  </label><br>
+  色数: <span id="colorVal">16</span><br>
   <input type="range" id="colors" min="2" max="64" value="16"><br>
 
-  <label title="小さいほど細かくなります">
-    細かさ（ltres）
-  </label><br>
+  細かさ<br>
   <input type="range" id="ltres" min="0.5" max="5" step="0.5" value="1"><br>
 
-  <label title="小さいほど滑らかになります">
-    滑らかさ（qtres）
-  </label><br>
+  滑らかさ<br>
   <input type="range" id="qtres" min="0.5" max="5" step="0.5" value="1"><br>
 
-  <label title="小さいパスを削除します">
-    ノイズ除去（pathomit）
-  </label><br>
+  ノイズ除去<br>
   <input type="range" id="pathomit" min="0" max="20" value="8"><br>
 
-  <label title="小さい色を無視します">
-    色簡略化（mincolorratio）
-  </label><br>
+  色簡略化<br>
   <input type="range" id="mincolorratio" min="0" max="0.05" step="0.005" value="0.005"><br>
 
-  <label title="白黒かカラーか選択">
-    モード
-  </label><br>
   <select id="mode">
     <option value="color">カラー</option>
     <option value="bw">白黒</option>
   </select>
-
 </details>
 
-<!-- 🔄 ローディング -->
+<!-- ローディング -->
 <div id="loading" style="display:none;">
   <div class="spinner"></div>
   <p>変換中...</p>
 </div>
 
-<h3>プレビュー</h3>
-<div id="preview"></div>
+<!-- before / after -->
+<div id="compare">
+  <div>
+    <p>元画像</p>
+    <img id="before">
+  </div>
+  <div>
+    <p>SVG</p>
+    <div id="preview"></div>
+  </div>
+</div>
 
 <a id="download" style="display:none">SVGダウンロード</a>
 
