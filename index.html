@@ -2,82 +2,104 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>PNG → SVG</title>
+<title>PNGをSVGベクターに変換</title>
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h2>PNG → SVG</h2>
+<div class="container">
 
-<!-- ドロップ -->
-<div id="dropArea">ここに画像をドロップ or クリック</div>
-<input type="file" id="fileInput" accept="image/png" hidden>
+  <!-- カード：アップロード・プリセット -->
+  <div class="card">
+    <h2>PNG → SVG</h2>
 
-<!-- プリセット -->
-<div>
-  <button onclick="setPreset('logo')">ロゴ</button>
-  <button onclick="setPreset('photo')">写真</button>
-  <button onclick="setPreset('icon')">アイコン</button>
-</div>
+    <!-- ドラッグ＆ドロップ -->
+    <div id="dropArea">画像をドロップ or クリック</div>
+    <input type="file" id="fileInput" hidden>
 
-<br>
-<button onclick="convert()">変換</button>
+    <!-- プリセット -->
+    <div id="presets">
+      <button class="preset-btn" onclick="setPreset('logo')">ロゴ</button>
+      <button class="preset-btn" onclick="setPreset('photo')">写真</button>
+      <button class="preset-btn" onclick="setPreset('icon')">アイコン</button>
+      <button class="preset-btn" id="customPreset" onclick="setPreset('custom')">カスタム</button>
+    </div>
 
-<!-- 高度設定 -->
-<details>
-  <summary>高度設定</summary>
-  <p class="note">より高度なSVGを求める場合のみ変更してください</p>
+    <!-- カラー/白黒切替 -->
+    <div id="colorMode">
+      <button class="mode-btn active" data-mode="color">カラー</button>
+      <button class="mode-btn" data-mode="bw">白黒</button>
+    </div>
 
-  色数: <span id="colorVal">16</span><br>
-  <input type="range" id="colors" min="2" max="64" value="16"><br>
+    <button class="main-btn" onclick="convert()">変換</button>
 
-  細かさ<br>
-  <input type="range" id="ltres" min="0.5" max="5" step="0.5" value="1"><br>
-
-  滑らかさ<br>
-  <input type="range" id="qtres" min="0.5" max="5" step="0.5" value="1"><br>
-
-  ノイズ除去<br>
-  <input type="range" id="pathomit" min="0" max="20" value="8"><br>
-
-  色簡略化<br>
-  <input type="range" id="mincolorratio" min="0" max="0.05" step="0.005" value="0.005"><br>
-
-  <select id="mode">
-    <option value="color">カラー</option>
-    <option value="bw">白黒</option>
-  </select><br><br>
-
-  <label>
-    <input type="checkbox" id="optimize" checked>
-    SVG最適化（軽量化）
-  </label>
-
-</details>
-
-<!-- ローディング -->
-<div id="loading" style="display:none;">
-  <div class="spinner"></div>
-  <p>変換中...</p>
-</div>
-
-<!-- 比較 -->
-<div id="compare">
-  <div>
-    <p>元画像</p>
-    <img id="before">
+    <!-- 最適化 -->
+    <label id="optLabel">
+      <input type="checkbox" id="optimize" checked>
+      SVG最適化（軽量化）
+    </label>
   </div>
-  <div>
-    <p>SVG</p>
-    <div id="preview"></div>
-  </div>
-</div>
 
-<a id="download" style="display:none">SVGダウンロード</a>
+  <!-- カード：高度設定 -->
+  <div class="card">
+    <details id="advancedSettings">
+      <summary>高度設定</summary>
+      <p class="note">より高度なSVGを求める場合のみ変更してください</p>
+
+      <!-- スライダー例 -->
+      <div class="slider-container">
+        <label>色数: <span id="colorVal">16</span> <img src="Asset/info.png" class="info-icon" data-info="SVGで使用する色の数です。"></label>
+        <input type="range" id="colors" min="2" max="64" value="16">
+      </div>
+
+      <div class="slider-container">
+        <label>細かさ <img src="Asset/info.png" class="info-icon" data-info="細かいディテールをどの程度残すかを調整します。"></label>
+        <input type="range" id="ltres" min="0.5" max="5" step="0.5" value="1">
+      </div>
+
+      <div class="slider-container">
+        <label>滑らかさ <img src="Asset/info.png" class="info-icon" data-info="曲線の滑らかさを調整します。"></label>
+        <input type="range" id="qtres" min="0.5" max="5" step="0.5" value="1">
+      </div>
+
+      <div class="slider-container">
+        <label>ノイズ除去 <img src="Asset/info.png" class="info-icon" data-info="不要なノイズをどれくらい除去するか調整します。"></label>
+        <input type="range" id="pathomit" min="0" max="20" value="8">
+      </div>
+
+      <div class="slider-container">
+        <label>色簡略化 <img src="Asset/info.png" class="info-icon" data-info="似た色をまとめる比率を設定します。"></label>
+        <input type="range" id="mincolorratio" min="0" max="0.05" step="0.005" value="0.005">
+      </div>
+
+    </details>
+  </div>
+
+  <!-- カード：比較表示 -->
+  <div class="card">
+    <div id="compare">
+      <div>
+        <p>Before</p>
+        <img id="before">
+      </div>
+      <div>
+        <p>After</p>
+        <div id="preview"></div>
+      </div>
+    </div>
+
+    <div id="compareToggle">
+      <button id="showBefore" class="toggle-btn active">Before</button>
+      <button id="showAfter" class="toggle-btn">After</button>
+    </div>
+
+    <a id="download" href="#"><img src="Asset/Download.png" alt="Download SVG"></a>
+  </div>
+
+</div>
 
 <script src="https://unpkg.com/imagetracerjs"></script>
 <script src="script.js"></script>
-
 </body>
 </html>
