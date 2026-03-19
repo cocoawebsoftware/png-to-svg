@@ -1,13 +1,63 @@
-const colorSlider = document.getElementById("colors");
-const colorVal = document.getElementById("colorVal");
+const dropArea = document.getElementById("dropArea");
+const fileInput = document.getElementById("fileInput");
+const beforeImg = document.getElementById("before");
 
-colorSlider.oninput = () => {
-  colorVal.textContent = colorSlider.value;
+let currentFile = null;
+
+// ドロップ
+dropArea.onclick = () => fileInput.click();
+
+dropArea.ondragover = e => {
+  e.preventDefault();
+  dropArea.classList.add("hover");
 };
 
+dropArea.ondragleave = () => {
+  dropArea.classList.remove("hover");
+};
+
+dropArea.ondrop = e => {
+  e.preventDefault();
+  dropArea.classList.remove("hover");
+
+  const file = e.dataTransfer.files[0];
+  if (file) loadFile(file);
+};
+
+fileInput.onchange = () => {
+  if (fileInput.files[0]) loadFile(fileInput.files[0]);
+};
+
+function loadFile(file) {
+  currentFile = file;
+  const url = URL.createObjectURL(file);
+  beforeImg.src = url;
+}
+
+// プリセット
+function setPreset(type) {
+  if (type === "logo") {
+    colors.value = 8;
+    ltres.value = 0.5;
+    qtres.value = 0.5;
+    pathomit.value = 10;
+  }
+  if (type === "photo") {
+    colors.value = 32;
+    ltres.value = 1;
+    qtres.value = 1;
+    pathomit.value = 5;
+  }
+  if (type === "icon") {
+    colors.value = 16;
+    ltres.value = 0.8;
+    qtres.value = 0.8;
+    pathomit.value = 12;
+  }
+}
+
 function convert() {
-  const file = document.getElementById("fileInput").files[0];
-  if (!file) return alert("ファイル選択");
+  if (!currentFile) return alert("画像入れて");
 
   const loading = document.getElementById("loading");
   const preview = document.getElementById("preview");
@@ -29,12 +79,12 @@ function convert() {
       const height = img.height;
 
       const options = {
-        ltres: parseFloat(document.getElementById("ltres").value),
-        qtres: parseFloat(document.getElementById("qtres").value),
-        pathomit: parseInt(document.getElementById("pathomit").value),
-        colorsampling: document.getElementById("mode").value === "bw" ? 0 : 2,
-        numberofcolors: parseInt(colorSlider.value),
-        mincolorratio: parseFloat(document.getElementById("mincolorratio").value)
+        ltres: parseFloat(ltres.value),
+        qtres: parseFloat(qtres.value),
+        pathomit: parseInt(pathomit.value),
+        colorsampling: mode.value === "bw" ? 0 : 2,
+        numberofcolors: parseInt(colors.value),
+        mincolorratio: parseFloat(mincolorratio.value)
       };
 
       ImageTracer.imageToSVG(img.src, function(svg) {
@@ -60,5 +110,5 @@ function convert() {
     };
   };
 
-  reader.readAsDataURL(file);
+  reader.readAsDataURL(currentFile);
 }
