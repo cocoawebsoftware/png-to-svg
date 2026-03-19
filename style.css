@@ -6,14 +6,19 @@ body {
 }
 
 #preview svg {
-  max-width: 90vw;   /* 画面幅に収める */
-  max-height: 70vh;  /* 画面高さに収める */
+  max-width: 90vw;
+  max-height: 70vh;
   width: auto;
   height: auto;
   border: 1px solid #555;
+  margin-top: 10px;
 }
 
 button {
   padding: 10px 20px;
   font-size: 16px;
+}
+
+input[type="range"] {
+  width: 200px;
 }
