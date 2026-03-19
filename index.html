@@ -10,11 +10,9 @@
 
 <h2>PNG → SVG</h2>
 
-<!-- ドラッグ＆ドロップ -->
+<!-- ドロップ -->
 <div id="dropArea">ここに画像をドロップ or クリック</div>
 <input type="file" id="fileInput" accept="image/png" hidden>
-
-<br>
 
 <!-- プリセット -->
 <div>
@@ -49,7 +47,13 @@
   <select id="mode">
     <option value="color">カラー</option>
     <option value="bw">白黒</option>
-  </select>
+  </select><br><br>
+
+  <label>
+    <input type="checkbox" id="optimize" checked>
+    SVG最適化（軽量化）
+  </label>
+
 </details>
 
 <!-- ローディング -->
@@ -58,7 +62,7 @@
   <p>変換中...</p>
 </div>
 
-<!-- before / after -->
+<!-- 比較 -->
 <div id="compare">
   <div>
     <p>元画像</p>
