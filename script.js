@@ -4,7 +4,7 @@ const beforeImg = document.getElementById("before");
 
 let currentFile = null;
 
-// ドロップ
+// ドラッグ＆ドロップ
 dropArea.onclick = () => fileInput.click();
 
 dropArea.ondragover = e => {
@@ -19,7 +19,6 @@ dropArea.ondragleave = () => {
 dropArea.ondrop = e => {
   e.preventDefault();
   dropArea.classList.remove("hover");
-
   const file = e.dataTransfer.files[0];
   if (file) loadFile(file);
 };
@@ -30,8 +29,7 @@ fileInput.onchange = () => {
 
 function loadFile(file) {
   currentFile = file;
-  const url = URL.createObjectURL(file);
-  beforeImg.src = url;
+  beforeImg.src = URL.createObjectURL(file);
 }
 
 // プリセット
@@ -54,6 +52,15 @@ function setPreset(type) {
     qtres.value = 0.8;
     pathomit.value = 12;
   }
+}
+
+// 最適化
+function optimizeSVG(svg) {
+  return svg
+    .replace(/(\d+\.\d{2})\d+/g, "$1")
+    .replace(/\n/g, "")
+    .replace(/\s{2,}/g, " ")
+    .replace(/<path d=""/g, "");
 }
 
 function convert() {
@@ -93,6 +100,11 @@ function convert() {
           "<svg",
           `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"`
         );
+
+        // 最適化
+        if (document.getElementById("optimize").checked) {
+          svg = optimizeSVG(svg);
+        }
 
         preview.innerHTML = svg;
 
