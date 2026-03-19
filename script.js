@@ -1,3 +1,10 @@
+const range = document.getElementById("colorRange");
+const colorText = document.getElementById("colorValue");
+
+range.oninput = () => {
+  colorText.textContent = range.value;
+};
+
 function convert() {
   const file = document.getElementById("fileInput").files[0];
   if (!file) return alert("ファイル選んで");
@@ -13,17 +20,19 @@ function convert() {
       const width = img.width;
       const height = img.height;
 
+      const colors = parseInt(range.value);
+
       ImageTracer.imageToSVG(
         img.src,
         function(svg) {
 
-          // 🔥 SVGにサイズを強制追加
+          // SVGサイズを元画像に合わせる
           svg = svg.replace(
             "<svg",
             `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"`
           );
 
-          // プレビュー表示
+          // 表示（CSSでアスペクト比維持しつつ縮小）
           document.getElementById("preview").innerHTML = svg;
 
           // ダウンロード
@@ -42,7 +51,8 @@ function convert() {
           qtres: 1,
           pathomit: 8,
           colorsampling: 2,
-          numberofcolors: 16
+          numberofcolors: colors,
+          mincolorratio: 0.02
         }
       );
 
