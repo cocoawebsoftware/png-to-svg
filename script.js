@@ -10,15 +10,12 @@ function convert() {
 
     img.onload = function() {
 
-      // 🔥 ここが本物ベクター化
       ImageTracer.imageToSVG(
         img.src,
         function(svg) {
 
-          // プレビュー表示
           document.getElementById("preview").innerHTML = svg;
 
-          // ダウンロード用
           const blob = new Blob([svg], { type: "image/svg+xml" });
           const url = URL.createObjectURL(blob);
 
@@ -30,12 +27,14 @@ function convert() {
         },
 
         {
-          // 🔥 ここ調整すると品質変わる
-          ltres: 1,   // 線の精度
-          qtres: 1,   // 曲線の滑らかさ
-          pathomit: 8, // 小さいノイズ除去
-          colorsampling: 0, // 0=白黒
-          numberofcolors: 2
+          ltres: 1,
+          qtres: 1,
+          pathomit: 8,
+
+          // 👇 ここが重要
+          colorsampling: 2,   // 自動カラー検出
+          numberofcolors: 16, // 色数（増やすとリアル）
+          mincolorratio: 0.02 // 小さい色を無視
         }
       );
 
