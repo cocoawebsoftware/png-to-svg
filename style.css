@@ -6,9 +6,11 @@ body {
 }
 
 #preview svg {
-  max-width: 300px;
+  max-width: 90vw;   /* 画面幅に収める */
+  max-height: 70vh;  /* 画面高さに収める */
+  width: auto;
+  height: auto;
   border: 1px solid #555;
-  margin-top: 10px;
 }
 
 button {
